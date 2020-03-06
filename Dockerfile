@@ -22,8 +22,8 @@ ENV SETTINGS_PATH=${settings_file}
 
 # RUN cat $MONGO_URL
 
-RUN npm i
-RUN ls
+# RUN npm i
+# RUN ls
 EXPOSE 3000
 # RUN "meteor --settings=${settings_file}"
 # CMD meteor --settings=${SETTINGS_PATH}
