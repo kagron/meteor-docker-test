@@ -7,21 +7,18 @@ services:
     build:
       context: .
       args:
+        port: "${PORT}"
         mongo_url: "${MONGO_URL}"
-        settings_file: "${SETTINGS_PATH}"
         root_url: "${ROOT_URL}"
-        allow_superuser: "${METEOR_ALLOW_SUPERUSER}"
     networks:
       - meteor-network
     ports:
-      - "3000:3000"
+      - 3000:3000
     volumes:
       - ./meteor/test-app:/app/
       - ./config/dev/:/settings
-      # - '/app/settings.json'
     depends_on:
       - mongo
-
 
   mongo:
     container_name: "mongo"
