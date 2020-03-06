@@ -1,0 +1,40 @@
+version: "3.1"
+
+services:
+  meteor:
+    container_name: "meteor_test"
+    command: sh -c "npm install && meteor --settings ../settings/settings.json"
+    build:
+      context: .
+      args:
+        mongo_url: "${MONGO_URL}"
+        settings_file: "${SETTINGS_PATH}"
+        root_url: "${ROOT_URL}"
+        allow_superuser: "${METEOR_ALLOW_SUPERUSER}"
+    networks:
+      - meteor-network
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./meteor/test-app:/app/
+      - ./config/dev/:/settings
+      # - '/app/settings.json'
+    depends_on:
+      - mongo
+
+
+  mongo:
+    container_name: "mongo"
+    image: mongo
+    restart: always
+    networks:
+      - meteor-network
+    volumes:
+      - database1_volume:/data/db
+
+networks: 
+  meteor-network:
+    driver: bridge
+
+volumes:
+  database1_volume:
