@@ -13,6 +13,14 @@ pipeline {
                     $class: 'DockerComposeBuilder',
                     dockerComposeFile: 'docker-compose.yml',
                     option: [
+                        $class: 'StartAllServices'
+                    ], 
+                    useCustomDockerComposeFile: false
+                ])
+                step([
+                    $class: 'DockerComposeBuilder',
+                    dockerComposeFile: 'docker-compose.yml',
+                    option: [
                         $class: 'ExecuteCommandInsideContainer',
                         command: 'npm run test',
                         index: 1,
