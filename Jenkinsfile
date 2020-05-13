@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'node:14',
+            args: '-p 3000:3000'
+        }
+    }
 
     environment {
         CI = 'true'
@@ -9,27 +14,29 @@ pipeline {
             steps {
                 echo 'Building...'
                 sh 'cp .env.example .env'
-                step([
-                    $class: 'DockerComposeBuilder',
-                    dockerComposeFile: 'docker-compose.yml',
-                    option: [
-                        $class: 'StartAllServices'
-                    ], 
-                    useCustomDockerComposeFile: false
-                ])
-                step([
-                    $class: 'DockerComposeBuilder',
-                    dockerComposeFile: 'docker-compose.yml',
-                    option: [
-                        $class: 'ExecuteCommandInsideContainer',
-                        command: 'npm run test',
-                        index: 1,
-                        privilegedMode: false,
-                        service: 'meteor',
-                        workDir: ''
-                    ],
-                    useCustomDockerComposeFile: false
-                ])
+                sh 'cd meteor/test-app'
+                sh 'npm install'
+                // step([
+                //     $class: 'DockerComposeBuilder',
+                //     dockerComposeFile: 'docker-compose.yml',
+                //     option: [
+                //         $class: 'StartAllServices'
+                //     ], 
+                //     useCustomDockerComposeFile: false
+                // ])
+                // step([
+                //     $class: 'DockerComposeBuilder',
+                //     dockerComposeFile: 'docker-compose.yml',
+                //     option: [
+                //         $class: 'ExecuteCommandInsideContainer',
+                //         command: 'npm run test',
+                //         index: 1,
+                //         privilegedMode: false,
+                //         service: 'meteor',
+                //         workDir: ''
+                //     ],
+                //     useCustomDockerComposeFile: false
+                // ])
             }
         }
 
