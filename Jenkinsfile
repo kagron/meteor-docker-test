@@ -14,8 +14,9 @@ pipeline {
             steps {
                 echo 'Building...'
                 sh 'cp .env.example .env'
-                sh 'cd meteor/test-app'
-                sh 'npm install'
+                dir('meteor/test-app') {
+                    sh 'npm install'
+                }
                 // step([
                 //     $class: 'DockerComposeBuilder',
                 //     dockerComposeFile: 'docker-compose.yml',
