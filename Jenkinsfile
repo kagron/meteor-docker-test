@@ -1,10 +1,14 @@
 pipeline {
     agent any
 
+    environment {
+        CI = 'true'
+    }
     stages {
         stage('Build') {
             steps {
                 echo 'Building...'
+                sh 'cp .env.example .env'
                 step([
                     $class: 'DockerComposeBuilder',
                     dockerComposeFile: 'docker-compose.yml',
