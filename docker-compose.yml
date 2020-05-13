@@ -1,11 +1,11 @@
-version: "3.1"
+version: "3.4"
 
 services:
   meteor:
     container_name: "meteor_test"
-    command: sh -c "npm install && meteor --settings ../settings/settings.json"
     build:
       context: .
+      target: development
       args:
         port: "${PORT}"
         mongo_url: "${MONGO_URL}"
@@ -13,7 +13,9 @@ services:
     networks:
       - meteor-network
     ports:
-      - 3000:3000
+      - "${PORT:-3000}:3000"
+    env_file:
+      - .env 
     volumes:
       - ./meteor/test-app:/app/
       - ./config/dev/:/settings
