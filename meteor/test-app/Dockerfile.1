@@ -1,0 +1,27 @@
+FROM node:13 as base_image
+
+ARG NODE_ENV=development
+ENV NODE_ENV=${NODE_ENV}
+
+ARG MONGO_URL="mongodb://localhost:27017/myappdb"
+ENV MONGO_URL=${MONGO_URL}
+
+ARG ROOT_URL="http://localhost:3000"
+ENV ROOT_URL=${MONGO_URL}
+
+RUN mkdir /app
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm install
+
+FROM node:13
+ENV METEOR_ALLOW_SUPERUSER=true
+RUN curl https://install.meteor.com/ | sh
+RUN mkdir /app
+WORKDIR /app
+COPY --from=base_image /app/node_modules node_modules
+
+COPY . .
+
+CMD [ "npm", "run", "build:prod" ]

@@ -4,18 +4,14 @@ services:
   meteor:
     container_name: "meteor_test"
     build:
-      context: .
-      target: development
+      context: ./meteor/test-app
       args:
-        port: "${PORT}"
-        mongo_url: "${MONGO_URL}"
-        root_url: "${ROOT_URL}"
+        mongo_url: "mongodb://mongo:27017/myappdb"
+        root_url: "http://localhost:3000"
     networks:
       - meteor-network
     ports:
-      - "${PORT:-3000}:3000"
-    env_file:
-      - .env 
+      - "3000:3000"
     volumes:
       - ./meteor/test-app:/app/
       - ./config/dev/:/settings
