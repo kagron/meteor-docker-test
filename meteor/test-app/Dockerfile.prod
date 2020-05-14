@@ -6,22 +6,23 @@ ENV NODE_ENV=${NODE_ENV}
 ARG MONGO_URL="mongodb://localhost:27017/myappdb"
 ENV MONGO_URL=${MONGO_URL}
 
+ARG PORT="3000"
+ENV PORT=${PORT}
+
 ARG ROOT_URL="http://localhost:3000"
-ENV ROOT_URL=${MONGO_URL}
+ENV ROOT_URL=${ROOT_URL}
 
-RUN mkdir /app
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm install
-
-FROM node:13
 ENV METEOR_ALLOW_SUPERUSER=true
-RUN curl https://install.meteor.com/ | sh
+
 RUN mkdir /app
 WORKDIR /app
-COPY --from=base_image /app/node_modules node_modules
+
+RUN curl https://install.meteor.com/ | sh
 
 COPY . .
 
-CMD [ "npm", "start" ]
+RUN meteor build ../ --directory --server-only
+RUN cd ../bundle/programs/server && npm install
+
+EXPOSE 3000
+CMD [ "node", "/bundle/main.js" ]
