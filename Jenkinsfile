@@ -36,19 +36,9 @@ pipeline {
           steps {
             echo 'Building...'
             echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
-            step(
-              [
-                $class: 'DockerBuilderPublisher',
-                cleanImages: false,
-                cleanupWithJenkinsJobDelete: false,
-                cloud: '',
-                dockerFileDirectory: '/app/meteor/test-app/Dockerfile.prod',
-                fromRegistry: [],
-                pushCredentialsId: 'dockerhub',
-                pushOnSuccess: true,
-                tagsString: 'kgrondin01/test-app:$BRANCH_NAME'
-              ]
-            )
+            def dockerfile = "/app/Dockerfile.prod"
+            def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
+            newBuild.push()
           }
         }
 
