@@ -34,8 +34,11 @@ pipeline {
             branch 'release/*'
           }
           steps {
-            echo 'Deploying...'
-            echo 'Tag...' + env.BRANCH_NAME?.split("/")[0]
+            echo 'Building...'
+            echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
+            dir('meteor/test-app') {
+              sh "docker build -t kgrondin01/test-app:" + env.BRANCH_NAME?.split("/")[1]
+            }
           }
         }
 
