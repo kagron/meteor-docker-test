@@ -33,13 +33,9 @@ pipeline {
           when {
             branch 'release/*'
           }
-          environment {
-            BRANCH = env.BRANCH_NAME
-            TAG = env.BRANCH_NAME?.split("/")[0]
-          }
           steps {
             echo 'Deploying...'
-            sh 'echo "Tag is $TAG"'
+            echo 'Tag...' + env.BRANCH_NAME?.split("/")[0]
           }
         }
 
