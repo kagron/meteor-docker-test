@@ -29,7 +29,7 @@ node {
         app = docker.build(
             "${repositoryOwner}/${imageName}",
             "--build-arg NODE_ENV=production " +
-            "--build-arg MONGO_URL=mongodb://mongo:27017/${imageName} "
+            "--build-arg MONGO_URL=mongodb://mongo:27017/${imageName} " +
             "-f ${dockerfile} ./meteor/test-app"
         )
     }
