@@ -10,10 +10,11 @@ node {
         /* Let's make sure we have the repository cloned to our workspace */
 
         checkout scm
-        nodeContainer = docker.image('node:13').withRun('--mount type=bind,source="$(pwd)",target=/app')
-        nodeContainer.inside {
-            dir('/app') {
-                sh 'npm install'
+        nodeContainer = docker.image('node:13').withRun('--mount type=bind,source="$(pwd)",target=/app') { c ->
+            nodeContainer.inside {
+                dir('/app') {
+                    sh 'npm install'
+                }
             }
         }
     }
