@@ -37,6 +37,8 @@ pipeline {
           steps {
             echo 'Building...'
             echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
+            sh 'ls -l .'
+            sh 'ls -l /var/jenkins_home'
             sh 'docker ps'
             // script {
             //   def dockerfile = "./meteor/test-app/Dockerfile.prod"
