@@ -37,7 +37,7 @@ pipeline {
             echo 'Building...'
             echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
             dir('meteor/test-app') {
-              sh "docker build -t kgrondin01/test-app:" + env.BRANCH_NAME?.split("/")[1]
+              sh "docker build -f ./Dockerfile.prod -t kgrondin01/test-app:" + env.BRANCH_NAME?.split("/")[1] + " ."
             }
           }
         }
