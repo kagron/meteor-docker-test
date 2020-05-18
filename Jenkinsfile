@@ -36,9 +36,11 @@ pipeline {
           steps {
             echo 'Building...'
             echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
-            def dockerfile = "/app/Dockerfile.prod"
-            def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
-            newBuild.push()
+            script {
+              def dockerfile = "/app/Dockerfile.prod"
+              def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
+              newBuild.push()
+            }
           }
         }
 
