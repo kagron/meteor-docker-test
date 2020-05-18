@@ -32,7 +32,7 @@ pipeline {
         stage('Build') {
           agent {
             docker {
-              'docker:dind'
+              image 'docker:dind'
             }
           }
           when {
