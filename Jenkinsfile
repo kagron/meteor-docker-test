@@ -1,60 +1,37 @@
-pipeline {
-    agent none
+node {
+    def app
+    def tag
+    def dockerfile = "./meteor/test-app/Dockerfile.prod"
+    def repositoryOwner = "kgrondin01"
+    def imageName = "test-app"
 
-    environment {
-        CI = 'true'
+    stage('Clone repository') {
+        /* Let's make sure we have the repository cloned to our workspace */
+
+        checkout scm
     }
-    stages {
-        stage('Install Dependencies') {
-          agent {
-              docker {
-                  image 'kgrondin01/simple-meteor-image:latest'
-                  args '-p 3000:3000'
-              }
-          }
-          steps {
-              echo 'Installing...'
-              sh 'cp .env.example .env'
-              dir('meteor/test-app') {
-                  sh 'npm install'
-              }
-          }
-        }
 
-        stage('Test') {
-          agent {
-              docker {
-                  image 'kgrondin01/simple-meteor-image:latest'
-                  args '-p 3000:3000'
-              }
-          }
-          steps {
-            echo 'Testing...'
-            dir('meteor/test-app') {
-                sh 'npm run test-ci'
-            }
-          }
-        }
-
-        stage('Build') {
-          agent any
-          when {
-            branch 'release/*'
-          }
-          steps {
-            echo 'Building...'
-            echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
-            sh 'ls -l .'
-            sh 'ls -l /var/jenkins_home'
-            sh 'docker ps'
-            // script {
-            //   def dockerfile = "./meteor/test-app/Dockerfile.prod"
-            //   def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
-            //   docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-            //     newBuild.push();
-            //   }
-            // }
-          }
-        }
-      }
+    stage('Build image') {
+        /* This builds the actual image; synonymous to
+         * docker build on the command line */
+        tag = env.BRANCH_NAME?.split("/")[1]
+        app = docker.build("${repositoryOwner}/${imageName}", "-f ${dockerfile} .")
     }
+
+    stage('Test image') {
+        app.inside {
+            sh 'npm run test'
+        }
+    }
+
+    stage('Push image') {
+        /* Finally, we'll push the image with two tags:
+         * First, the incremental build number from Jenkins
+         * Second, the 'latest' tag.
+         * Pushing multiple tags is cheap, as all the layers are reused. */
+        docker.withRegistry('https://registry.hub.docker.com', 'personal-dockerhub') {
+            app.push("${tag}")
+            app.push("latest")
+        }
+    }
+}
