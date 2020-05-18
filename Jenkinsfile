@@ -37,13 +37,14 @@ pipeline {
           steps {
             echo 'Building...'
             echo 'Tag...' + env.BRANCH_NAME?.split("/")[1]
-            script {
-              def dockerfile = "./meteor/test-app/Dockerfile.prod"
-              def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
-              docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
-                newBuild.push();
-              }
-            }
+            sh 'docker ps'
+            // script {
+            //   def dockerfile = "./meteor/test-app/Dockerfile.prod"
+            //   def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
+            //   docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+            //     newBuild.push();
+            //   }
+            // }
           }
         }
       }
