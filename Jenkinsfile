@@ -40,10 +40,11 @@ pipeline {
             script {
               def dockerfile = "/app/Dockerfile.prod"
               def newBuild = docker.build("kgrondin01/test-app:${env.BRANCH_NAME?.split("/")[1]}", "-f ${dockerfile} .")
-              newBuild.push()
+              docker.withRegistry('https://registry.hub.docker.com', 'dockerhub') {
+                newBuild.push();
+              }
             }
           }
         }
-
       }
     }
