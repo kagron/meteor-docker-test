@@ -30,9 +30,7 @@ pipeline {
         }
 
         stage('Build') {
-          agent {
-            any
-          }
+          agent any
           when {
             branch 'release/*'
           }
