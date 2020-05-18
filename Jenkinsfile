@@ -30,11 +30,7 @@ pipeline {
         }
 
         stage('Build') {
-          agent {
-            docker {
-              image 'docker:dind'
-            }
-          }
+          agent any
           when {
             branch 'release/*'
           }
