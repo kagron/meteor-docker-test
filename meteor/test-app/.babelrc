@@ -1,0 +1,28 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "shippedProposals": true,
+                "useBuiltIns": "usage",
+                "corejs": "3"
+            }
+        ],
+        "@babel/preset-react"
+    ],
+    "env": {
+        "test": {
+            "plugins": ["require-context-hook"]
+        }
+    },
+    "plugins": [
+        [
+            "module-resolver",
+            {
+                "alias": {
+                    "imports": "/imports"
+                }
+            }
+        ]
+    ]
+}

@@ -15,9 +15,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 
-FROM node:13
+FROM kgrondin01/simple-meteor-image:latest
 ENV METEOR_ALLOW_SUPERUSER=true
-RUN curl https://install.meteor.com/ | sh
 RUN mkdir /app
 WORKDIR /app
 COPY --from=base_image /app/node_modules node_modules

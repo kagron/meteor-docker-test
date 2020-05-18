@@ -1,7 +1,7 @@
 pipeline {
     agent {
         docker {
-            image 'node:14'
+            image 'kgrondin01/simple-meteor-image:latest'
             args '-p 3000:3000'
         }
     }
@@ -10,46 +10,36 @@ pipeline {
         CI = 'true'
     }
     stages {
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Building...'
+                echo 'Installing...'
                 sh 'cp .env.example .env'
                 dir('meteor/test-app') {
                     sh 'npm install'
                 }
-                // step([
-                //     $class: 'DockerComposeBuilder',
-                //     dockerComposeFile: 'docker-compose.yml',
-                //     option: [
-                //         $class: 'StartAllServices'
-                //     ], 
-                //     useCustomDockerComposeFile: false
-                // ])
-                // step([
-                //     $class: 'DockerComposeBuilder',
-                //     dockerComposeFile: 'docker-compose.yml',
-                //     option: [
-                //         $class: 'ExecuteCommandInsideContainer',
-                //         command: 'npm run test',
-                //         index: 1,
-                //         privilegedMode: false,
-                //         service: 'meteor',
-                //         workDir: ''
-                //     ],
-                //     useCustomDockerComposeFile: false
-                // ])
             }
         }
 
         stage('Test') {
           steps {
             echo 'Testing...'
+            dir('meteor/test-app') {
+                sh 'npm run test-ci'
+            }
           }
         }
 
-        stage('Deploy') {
+        stage('Build') {
+          when {
+            branch 'release/*'
+          }
+          environment {
+            BRANCH = env.BRANCH_NAME
+            TAG = env.BRANCH_NAME?.split("/")[0]
+          }
           steps {
             echo 'Deploying...'
+            sh 'echo "Tag is $TAG"'
           }
         }
 

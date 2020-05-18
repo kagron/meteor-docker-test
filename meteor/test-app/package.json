@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "start": "meteor --settings /settings/settings.json",
-    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll --config jest.config.js",
+    "test-ci": "node ./node_modules/jest/bin/jest.js --ci --config jest.config.js",
     "build:prod": "meteor build ../ --directory --server-only && cd ../bundle/server && ls",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
@@ -22,5 +23,22 @@
       "server": "server/main.js"
     },
     "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^26.0.1",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "babel-plugin-require-context-hook": "^1.0.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2",
+    "enzyme-to-json": "^3.4.4",
+    "jest": "^26.0.1",
+    "jest-cli": "^26.0.1",
+    "jest-meteor-stubs": "^1.5.1"
   }
 }
