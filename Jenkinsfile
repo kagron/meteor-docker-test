@@ -1,7 +1,7 @@
 node {
     def app
     def tag
-    def dockerfile = "./meteor/test-app/Dockerfile.prod"
+    def dockerfile = "./meteor/test-app/Dockerfile"
     def repositoryOwner = "kgrondin01"
     def imageName = "test-app"
 
