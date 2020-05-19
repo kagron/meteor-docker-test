@@ -21,7 +21,7 @@ node {
     stage('Test image') {
         docker.image('node:13.14').inside {
             dir('./meteor/test-app') {
-                sh 'npm run test'
+                sh 'npm run test-ci'
             }
         }
     }
