@@ -30,7 +30,7 @@ node {
             docker.image('node:13.14').inside {
                 sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
                 sh 'tar -xf git-crypt-0.6.0.tar.gz'
-                sh 'echo $USER'
+                sh 'echo pwd'
                 dir('git-crypt-0.6.0') {
                     sh 'make'
                     sh 'make install PREFIX=/usr/local'
