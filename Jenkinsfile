@@ -36,7 +36,7 @@ node {
                     withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
                         sh 'cp $PEM_PATH ./'
                         sh 'ls'
-                        sh "sed -i 's/PEM_PATH_HERE/.\//ssh-key-PEM_PATH' ./mup.js"
+                        sh "sed -i 's/PEM_PATH_HERE/.\/ssh-key-PEM_PATH/' ./mup.js"
                         sh 'mup setup --verbose'
                         sh 'mup deploy --verbose'
                         sh 'rm ./ssh-key-PEM_PATH'
