@@ -13,5 +13,6 @@ module.exports = {
         "**/?(*.)+(spec|test).[jt]s?(x)",
         "**/__tests__/**/*.[jt]s?(x)",
         "<rootDir>/tests/*.js"
-    ]
+    ],
+    reporters: [ "default", "jest-junit" ]
 };
