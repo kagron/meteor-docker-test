@@ -15,7 +15,7 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY . .
-RUN sh /app/scripts/install_dependencies.sh
+RUN sh /app/scripts/install_dependencies.sh 2>&1
 RUN ls /bundle
 
-CMD [ "sh", "/app/scripts/entrypoint.sh" ]
+CMD [ "sh", "/app/scripts/entrypoint.sh", " 2>&1" ]
