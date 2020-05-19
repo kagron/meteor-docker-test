@@ -27,25 +27,11 @@ node {
 
     stage('Build and deploy') {
         if ((env.BRANCH_NAME =~ /release\/.*/)) {
-            docker.image('node:13.14').inside {
-                sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
-                sh 'tar -xf git-crypt-0.6.0.tar.gz'
-                dir('git-crypt-0.6.0') {
-                    sh 'pwd'
-                    sh 'make'
-                    sh 'make install PREFIX=$(pwd)'
-                    sh 'curl https://install.meteor.com/ | sh'
-                    sh 'export PATH=$(pwd)/bin:$PATH'
-                    sh 'export METEOR_ALLOW_SUPERUSER=true'
-                    sh 'echo $PATH'
-                    withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
-                        sh 'gpg --import $GPG_KEY'
-                    }
+            docker.image('kgrondin01/simple-meteor-image').inside {
+                withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
+                    sh 'gpg --import $GPG_KEY'
                 }
-                dir('./meteor/test-app') {
-                    sh "${WORKSPACE}/git-crypt-0.6.0/bin/git-crypt unlock"
-                    sh 'npm i -g mup'
-                }
+                sh "git-crypt unlock"
                 dir('./meteor/test-app/.deploy/staging') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
                         sh "sed -i 's/PEM_PATH_HERE/$PEM_PATH'"
