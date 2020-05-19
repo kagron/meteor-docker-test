@@ -42,7 +42,7 @@ node {
                         sh 'gpg --import $GPG_KEY'
                     }
                 }
-                sh 'git-crypt unlock'
+                sh './git-crypt-0.6.0/bin/git-crypt unlock'
                 sh 'npm i -g mup'
                 dir('./meteor/test-app/.deploy/staging') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
