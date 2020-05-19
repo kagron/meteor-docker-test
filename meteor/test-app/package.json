@@ -4,7 +4,7 @@
   "scripts": {
     "start": "meteor --settings /settings/settings.json",
     "test": "node ./node_modules/jest/bin/jest.js --watchAll --config jest.config.js",
-    "test-ci": "node ./node_modules/jest/bin/jest.js --ci --config jest.config.js --testResultsProcessor='jest-junit'",
+    "test-ci": "node ./node_modules/jest/bin/jest.js --ci --config jest.config.js  --reporters=default --reporters=jest-junit",
     "build:prod": "meteor build ../ --directory --server-only && cd ../bundle/server && ls",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
