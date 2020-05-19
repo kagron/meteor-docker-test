@@ -1,6 +1,4 @@
 node {
-    def isRelease = (env.BRANCH_NAME =~ /release\/.*/)
-
     stage('Install depencies') {
         /* Let's make sure we have the repository cloned to our workspace */
 
@@ -28,7 +26,7 @@ node {
     }
 
     stage('Build and deploy') {
-        if (isRelease) {
+        if ((env.BRANCH_NAME =~ /release\/.*/)) {
             docker.image('node:13.14').inside {
                 dir('../') {
                     sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
