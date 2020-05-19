@@ -31,6 +31,8 @@ node {
                 sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
                 sh 'tar -xf git-crypt-0.6.0.tar.gz'
                 dir('git-crypt-0.6.0') {
+                    sh 'pwd'
+                    sh 'ls -l /var/jenkins_home'
                     sh 'mkdir /var/jenkins_home/bin'
                     sh 'make'
                     sh 'make install PREFIX=/var/jenkins_home'
