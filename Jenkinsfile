@@ -35,7 +35,7 @@ node {
                     sh 'make'
                     sh 'make install PREFIX=$(pwd)'
                     sh 'curl https://install.meteor.com/ | sh'
-                    sh 'export PATH=$(pwd):$PATH'
+                    sh 'export PATH=$(pwd)/bin:$PATH'
                     sh 'export METEOR_ALLOW_SUPERUSER=true'
                     withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
                         sh 'gpg --import $GPG_KEY'
