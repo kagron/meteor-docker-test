@@ -1,51 +1,47 @@
 node {
-    def app
-    def tag
-    def dockerfile = "./meteor/test-app/Dockerfile"
-    def repositoryOwner = "kgrondin01"
-    def imageName = "test-app"
-
-    stage('Clone repository') {
+    stage('Install depencies') {
         /* Let's make sure we have the repository cloned to our workspace */
 
         checkout scm
         docker.image('node:13.14').inside{
-            sh 'ls'
-            sh 'pwd'
-            dir('./meteor/test-app') {
+            /* 
+             * Install depdencies inside a node container.  By default
+             * the current directory is mounted to the docker container
+             */
+            dir('./meteor/test-app'){
                 sh 'npm install'
             }
         }
     }
 
-    stage('Test image') {
+    stage('Run Tests') {
         docker.image('node:13.14').inside {
+            /* Since the directory was mounted above, our node_modules will be in the
+             * directory and we can spin up the container to now run tests
+             */
             dir('./meteor/test-app') {
                 sh 'npm run test-ci'
             }
         }
     }
 
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
-        tag = env.BRANCH_NAME?.split("/")[1]
-        app = docker.build(
-            "${repositoryOwner}/${imageName}",
-            "--build-arg NODE_ENV=production " +
-            "--build-arg MONGO_URL=mongodb://mongo:27017/${imageName} " +
-            "-f ${dockerfile} ./meteor/test-app"
-        )
-    }
-
-    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', 'personal-dockerhub') {
-            app.push("${tag}")
-            app.push("latest")
+    stage('Build and deploy') {
+        if ((env.BRANCH_NAME =~ /release\/.*/)) {
+            docker.image('kgrondin01/simple-meteor-image').inside {
+                withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
+                    sh 'gpg --import $GPG_KEY'
+                }
+                sh "git-crypt unlock"
+                dir('./meteor/test-app/.deploy/staging') {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
+                        sh 'cp $PEM_PATH ./'
+                        sh 'sed -i "s/PEM_PATH_HERE/.\\/ssh-key-PEM_PATH/" ./mup.js'
+                        sh 'mup setup --verbose'
+                        sh 'mup deploy --verbose'
+                        sh 'rm ./ssh-key-PEM_PATH'
+                    }
+                }
+            }
         }
     }
 }
