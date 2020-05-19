@@ -33,8 +33,9 @@ node {
                 sh 'pwd'
                 dir('git-crypt-0.6.0') {
                     sh 'make'
-                    sh 'make install PREFIX=/usr/local'
+                    sh 'make install PREFIX=/var/jenkins_home'
                     sh 'curl https://install.meteor.com/ | sh'
+                    sh 'export PATH=/var/jenkins_home:$PATH'
                     sh 'export METEOR_ALLOW_SUPERUSER=true'
                     withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
                         sh 'gpg --import $GPG_KEY'
