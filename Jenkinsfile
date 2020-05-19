@@ -41,7 +41,7 @@ node {
                 }
                 sh 'git-crypt unlock'
                 sh 'npm i -g mup'
-                dir('.meteor/test-app/.deploy/staging') {
+                dir('./meteor/test-app/.deploy/staging') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
                         sh "sed -i 's/PEM_PATH_HERE/$PEM_PATH'"
                     }
