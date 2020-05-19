@@ -32,12 +32,10 @@ node {
                 sh 'tar -xf git-crypt-0.6.0.tar.gz'
                 dir('git-crypt-0.6.0') {
                     sh 'pwd'
-                    sh 'ls -l /var/jenkins_home'
-                    sh 'mkdir /var/jenkins_home/bin'
                     sh 'make'
-                    sh 'make install PREFIX=/var/jenkins_home'
+                    sh 'make install PREFIX=$(pwd)'
                     sh 'curl https://install.meteor.com/ | sh'
-                    sh 'export PATH=/var/jenkins_home:$PATH'
+                    sh 'export PATH=$(pwd):$PATH'
                     sh 'export METEOR_ALLOW_SUPERUSER=true'
                     withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
                         sh 'gpg --import $GPG_KEY'
@@ -48,9 +46,9 @@ node {
                 dir('./meteor/test-app/.deploy/staging') {
                     withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
                         sh "sed -i 's/PEM_PATH_HERE/$PEM_PATH'"
+                        sh 'mup setup --verbose'
+                        sh 'mup deploy --verbose'
                     }
-                    sh 'mup setup --verbose'
-                    sh 'mup deploy --verbose'
                 }
             }
         }
