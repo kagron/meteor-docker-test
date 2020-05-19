@@ -30,11 +30,11 @@ node {
             docker.image('node:13.14').inside {
                 sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
                 sh 'tar -xf git-crypt-0.6.0.tar.gz'
-                sh 'pwd'
                 dir('git-crypt-0.6.0') {
                     sh 'make'
                     sh 'make install PREFIX=/var/jenkins_home'
                     sh 'curl https://install.meteor.com/ | sh'
+                    sh 'mkdir /var/jenkins_home/bin'
                     sh 'export PATH=/var/jenkins_home:$PATH'
                     sh 'export METEOR_ALLOW_SUPERUSER=true'
                     withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
