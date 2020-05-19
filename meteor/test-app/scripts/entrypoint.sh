@@ -7,3 +7,5 @@ if [ $NODE_ENV = 'production' ]; then
 else
     npm start
 fi
+
+echo "[METEOR] Server started"
