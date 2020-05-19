@@ -28,17 +28,15 @@ node {
     stage('Build and deploy') {
         if ((env.BRANCH_NAME =~ /release\/.*/)) {
             docker.image('node:13.14').inside {
-                dir('../') {
-                    sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
-                    sh 'tar -xf git-crypt-0.6.0.tar.gz'
-                    dir('git-crypt-0.6.0') {
-                        sh 'make'
-                        sh 'make install PREFIX=/usr/local'
-                        sh 'curl https://install.meteor.com/ | sh'
-                        sh 'export METEOR_ALLOW_SUPERUSER=true'
-                        withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
-                            sh 'gpg --import $GPG_KEY'
-                        }
+                sh 'wget https://www.agwa.name/projects/git-crypt/downloads/git-crypt-0.6.0.tar.gz'
+                sh 'tar -xf git-crypt-0.6.0.tar.gz'
+                dir('git-crypt-0.6.0') {
+                    sh 'make'
+                    sh 'make install PREFIX=/usr/local'
+                    sh 'curl https://install.meteor.com/ | sh'
+                    sh 'export METEOR_ALLOW_SUPERUSER=true'
+                    withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
+                        sh 'gpg --import $GPG_KEY'
                     }
                 }
                 sh 'git-crypt unlock'
