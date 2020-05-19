@@ -20,7 +20,10 @@ node {
              * directory and we can spin up the container to now run tests
              */
             dir('./meteor/test-app') {
-                sh 'npm run test-ci'
+                withEnv(["JEST_JUNIT_OUTPUT=./jest-test-results.xml"]) {
+                    sh 'npm run test-ci'
+                }
+                junit 'jest-test-results.xml'
             }
         }
     }
