@@ -9,21 +9,19 @@ node {
         /* Let's make sure we have the repository cloned to our workspace */
 
         checkout scm
-        docker.image('node:13').withRun("--mount type=bind,source=" + env.WORKSPACE + ",target=/app") { c ->
-            docker.image('node:13').inside {
-                dir('/app/meteor/test-app') {
-                    sh 'npm install'
-                }
+        docker.image('node:13.14').inside{
+            sh 'ls'
+            sh 'pwd'
+            dir('./meteor/test-app') {
+                sh 'npm install'
             }
         }
     }
 
     stage('Test image') {
-        docker.image('node:13').withRun("--mount type=bind,source=" + env.WORKSPACE + ",target=/app") { c ->
-            docker.image('node:13').inside {
-                dir('/app/meteor/test-app') {
-                    sh 'npm run test'
-                }
+        docker.image('node:13.14').inside {
+            dir('./meteor/test-app') {
+                sh 'npm run test'
             }
         }
     }
