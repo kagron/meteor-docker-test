@@ -28,21 +28,19 @@ node {
         }
     }
 
-    stage('Build and Deploy to Staging') {
-        if ((env.BRANCH_NAME =~ /release\/.*/) && !env.CHANGE_ID) {
-            docker.image('kgrondin01/simple-meteor-image').inside {
-                withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
-                    sh 'gpg --import $GPG_KEY'
-                }
-                sh "git-crypt unlock"
-                dir('./meteor/test-app/.deploy/staging') {
-                    withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
-                        sh 'cp $PEM_PATH ./'
-                        sh 'sed -i "s/PEM_PATH_HERE/.\\/ssh-key-PEM_PATH/" ./mup.js'
-                        sh 'mup setup --verbose'
-                        sh 'mup deploy --verbose'
-                        sh 'rm ./ssh-key-PEM_PATH'
-                    }
+    stage('Build and Deploy to Production') {
+        docker.image('kgrondin01/simple-meteor-image').inside {
+            withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
+                sh 'gpg --import $GPG_KEY'
+            }
+            sh "git-crypt unlock"
+            dir('./meteor/test-app/.deploy/staging') {
+                withCredentials([sshUserPrivateKey(credentialsId: 'meteor-test-mup-pem', keyFileVariable: 'PEM_PATH')]) {
+                    sh 'cp $PEM_PATH ./'
+                    sh 'sed -i "s/PEM_PATH_HERE/.\\/ssh-key-PEM_PATH/" ./mup.js'
+                    sh 'mup setup --verbose'
+                    sh 'mup deploy --verbose'
+                    sh 'rm ./ssh-key-PEM_PATH'
                 }
             }
         }

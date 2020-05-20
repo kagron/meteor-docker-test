@@ -1,4 +1,4 @@
-FROM node:13 as base_image
+FROM kgrondin01/simple-meteor-image:latest as base_image
 
 ARG NODE_ENV="development"
 ENV NODE_ENV=${NODE_ENV}
@@ -7,20 +7,19 @@ ARG MONGO_URL="mongodb://localhost:27017/myappdb"
 ENV MONGO_URL=${MONGO_URL}
 
 ARG ROOT_URL="http://localhost:3000"
-ENV ROOT_URL=${MONGO_URL}
+ENV ROOT_URL=${ROOT_URL}
 
-RUN mkdir /app
-WORKDIR /app
+ENV PORT="3000"
 
-COPY package*.json ./
-RUN npm install
-
-FROM kgrondin01/simple-meteor-image:latest
 ENV METEOR_ALLOW_SUPERUSER=true
+
 RUN mkdir /app
 WORKDIR /app
-COPY --from=base_image /app/node_modules node_modules
 
 COPY . .
+RUN sh /app/scripts/install_dependencies.sh 2>&1
+RUN ls /bundle
 
-CMD [ "npm", "start" ]
+EXPOSE 3000
+
+CMD [ "sh", "/app/scripts/entrypoint.sh", " 2>&1" ]
