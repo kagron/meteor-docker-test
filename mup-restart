@@ -1,6 +1,7 @@
 node {
     def type = params.TYPE
     stage("Restart ${type} server") {
+        checkout scm
         docker.image('kgrondin01/simple-meteor-image').inside {
             withCredentials([file(credentialsId: 'gpgKey', variable: 'GPG_KEY')]) {
                 sh 'gpg --import $GPG_KEY'
