@@ -46,6 +46,8 @@ node {
                         }
                     }
                 }
+            } else {
+                echo 'Not on release branch -- skipping deployment'
             }
         }
     } catch (e) {
