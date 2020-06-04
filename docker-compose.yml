@@ -5,16 +5,8 @@ services:
     container_name: "meteor_test"
     build:
       context: ./meteor/test-app
-      args:
-        mongo_url: "mongodb://mongo:27017/myappdb"
-        root_url: "http://localhost:3000"
     networks:
       - meteor-network
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./meteor/test-app:/app/
-      - ./config/dev/:/settings
     depends_on:
       - mongo
 

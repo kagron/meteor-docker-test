@@ -18,8 +18,7 @@ WORKDIR /app
 
 COPY . .
 RUN sh /app/scripts/install_dependencies.sh 2>&1
-RUN ls /bundle
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD [ "sh", "/app/scripts/entrypoint.sh", " 2>&1" ]

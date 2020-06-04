@@ -1,0 +1,17 @@
+version: "3.4"
+
+services:
+  meteor:
+    build:
+      context: ./meteor/test-app
+      args:
+        MONGO_URL: "mongodb://mongo:27017/myappdb"
+        ROOT_URL: "${ROOT_URL:-http://localhost:3000}"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./meteor/test-app:/app/
+      - ./config/dev/:/settings
+
+volumes:
+  database1_volume:
