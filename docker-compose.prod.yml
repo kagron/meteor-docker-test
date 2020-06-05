@@ -26,7 +26,7 @@ services:
     container_name: "traefik"
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure=true"
+      - "--api"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.websecure.address=:443"
@@ -35,12 +35,17 @@ services:
       - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "443:443"
-      - "8080:8080"
+      # - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./lestencrypt:/letsencrypt"
     networks:
       - meteor-network
+    labels:
+      - "traefik.http.routers.meteor-test.rule=Path(`/dashboard`)"
+      - "traefik.http.routers.meteor-test.entrypoints=websecure"
+      - "traefik.http.routers.meteor-test.tls.certresolver=leresolver"
+      - "traefik.http.middlewares.meteor-test-header.headers.sslredirect=true"
 
 volumes:
   database1_volume:
