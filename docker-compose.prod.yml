@@ -23,7 +23,7 @@ services:
     container_name: "traefik"
     command:
       #- "--log.level=DEBUG"
-      - "--api.insecure"
+      - "--api"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -34,7 +34,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "./lestencrypt:/letsencrypt"
@@ -42,6 +41,7 @@ services:
       - meteor-network
     labels:
       # Dashboard
+      - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.entrypoints=websecure"
