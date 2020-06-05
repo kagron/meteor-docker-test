@@ -14,7 +14,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.meteor-test.rule=Host(`meteor.${DOMAIN}`)"
-      - "traefik.http.routers.meteor-test.entrypoints=web"
+      - "traefik.http.routers.meteor-test.entrypoints=websecure"
+      - "traefik.http.routeers.meteor-test.tls.certresolver=leresolver"
       - "traefik.http.services.meteor-test-svc.loadbalancer.server.port=3000"
   
   traefik:
@@ -25,12 +26,16 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
-      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.leresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.leresolver.acme.email=kagron12@gmail.com"
+      - "--certificatesresolvers.leresolver.acme.storage=/letsencrypt/acme.json"
     ports:
-      - "80:80"
+      - "443:443"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./lestencrypt:/letsencrypt"
     networks:
       - meteor-network
 
