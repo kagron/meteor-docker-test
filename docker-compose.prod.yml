@@ -15,7 +15,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.meteor-test.rule=Host(`meteor.${DOMAIN}`)"
       - "traefik.http.routers.meteor-test.entrypoints=websecure"
-      - "traefik.http.routeers.meteor-test.tls.certresolver=leresolver"
+      - "traefik.http.routers.meteor-test.tls.certresolver=leresolver"
       - "traefik.http.services.meteor-test-svc.loadbalancer.server.port=3000"
   
   traefik:
