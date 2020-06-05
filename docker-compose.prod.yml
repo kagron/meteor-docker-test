@@ -42,10 +42,11 @@ services:
     networks:
       - meteor-network
     labels:
-      - "traefik.http.routers.meteor-test.rule=Path(`/dashboard`)"
-      - "traefik.http.routers.meteor-test.entrypoints=websecure"
-      - "traefik.http.routers.meteor-test.tls.certresolver=leresolver"
-      - "traefik.http.middlewares.meteor-test-header.headers.sslredirect=true"
+      - "traefik.http.routers.traefik.rule=Path(`/dashboard`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.tls.certresolver=leresolver"
+      - "traefik.http.services.traefik-svc.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.traefik-header.headers.sslredirect=true"
 
 volumes:
   database1_volume:
