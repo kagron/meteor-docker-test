@@ -13,7 +13,7 @@ services:
       - ./config/dev/:/settings
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.meteor-test.rule=Host(`localhost`)"
+      - "traefik.http.routers.meteor-test.rule=Host(`meteor.${DOMAIN}`)"
       - "traefik.http.routers.meteor-test.entrypoints=web"
       - "traefik.http.services.meteor-test-svc.loadbalancer.server.port=3000"
   
