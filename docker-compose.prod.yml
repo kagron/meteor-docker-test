@@ -43,10 +43,10 @@ services:
     labels:
       # Dashboard
       - "traefik.http.routers.traefik.rule=Path(`/dashboard`)"
-      - "traefik.http.routers.traefik.service=traefik-svc"
+      - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=leresolver"
-      # Https Redirection
+      # global redirect to https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
       - "traefik.http.routers.http-catchall.middlewares=redirect-to-https"
