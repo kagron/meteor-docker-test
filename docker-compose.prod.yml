@@ -41,11 +41,11 @@ services:
       - meteor-network
     labels:
       # Dashboard
-      - "traefik.http.routers.traefik.rule=Path(`/dashboard`)"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.entrypoints=websecure"
       - "traefik.http.routers.traefik.tls.certresolver=leresolver"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      # - "traefik.http.services.traefik.loadbalanscer.server.port=8080"
       # global redirect to https
       - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
       - "traefik.http.routers.http-catchall.entrypoints=web"
